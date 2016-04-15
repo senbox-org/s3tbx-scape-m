@@ -1,0 +1,11 @@
+org.esa.s3tbx.scapem.operator.ScapeMOp$Spi
+org.esa.s3tbx.scapem.operator.ScapeMAtmosCorrOp$Spi
+org.esa.s3tbx.scapem.operator.ScapeMVis2AotOp$Spi
+org.esa.s3tbx.scapem.operator.ScapeMVisibilityOp$Spi
+org.esa.s3tbx.scapem.operator.ScapeMGapFillOp$Spi
+org.esa.s3tbx.scapem.operator.ScapeMSmoothSimpleKernelOp$Spi
+org.esa.s3tbx.scapem.idepix_algo_copy.scapem.FubScapeMOp$Spi
+org.esa.s3tbx.scapem.idepix_algo_copy.scapem.FubScapeMLakesOp$Spi
+org.esa.s3tbx.scapem.idepix_algo_copy.scapem.FubScapeMClassificationOp$Spi
+
+

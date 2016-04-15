@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.esa.snap:snap-rcp:4.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/esa/snap/snap-rcp/4.0.0-SNAPSHOT/snap-rcp-4.0.0-20160414.121712-22.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/esa/snap/snap-rcp/4.0.0-SNAPSHOT/snap-rcp-4.0.0-20160414.121712-22-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/esa/snap/snap-rcp/4.0.0-SNAPSHOT/snap-rcp-4.0.0-20160414.121712-22-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

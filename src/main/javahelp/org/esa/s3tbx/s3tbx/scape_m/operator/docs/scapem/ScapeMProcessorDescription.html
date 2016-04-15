@@ -1,0 +1,275 @@
+<!--
+  ~ Copyright (C) 2013 Brockmann Consult GmbH (info@brockmann-consult.de)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU General Public License as published by the Free
+  ~ Software Foundation; either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+  ~ more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along
+  ~ with this program; if not, see http://www.gnu.org/licenses/
+  -->
+
+<html>
+<head>
+    <title>Scape-M Processing Tool</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<table class="header">
+    <tr class="header">
+        <td class="header">&nbsp;
+            Scape-M Processing
+        </td>
+        <td class="header" align="right"><a href="../general/BeamOverview.html"><img src="../images/BeamHeader.jpg"
+                                                                                     border=0></a>
+        </td>
+    </tr>
+</table>
+
+<h3>User Interfaces</h3>
+
+<!--- Synergy Processor -------------------------------------------->
+<h3>Scape-M Processor</h3>
+
+<h4>Auxiliary Data</h4>
+
+<p>
+    The processor uses a Look-Up Table (LUT) which was generated from MODTRAN radiative transfer code and
+    which provides the atmospheric parameters from multidimensional interpolation. This LUT is included
+    in the Scape-M processor package, no additional user action is required.
+</p>
+
+<h4>I/O Parameters</h4>
+
+<p>
+    Selecting the <b>Scape-M Processor</b> command from the VISAT tool menu pops up the
+    following dialog:
+</p>
+
+<p align="center">
+    <img src="images/ScapeMProcessingDialog_io.png" alt="Scape-M Processing IO"/>
+</p>
+
+<h5>Source Products Group</h5>
+
+<p class="i1">
+    <b>Source Product:</b>
+    Here the user specifies the MERIS L1b (RR or FR) source product. The combo box presents
+    a list of all products open in VISAT. The user may select one of these
+    or, by clicking on the button next to the combo box, choose a product
+    from the file system.
+</p>
+
+<h5>Target Product Group</h5>
+
+<p class="i1">
+    <b>Name:</b>
+    Used to specify the name of the target product.
+</p>
+
+<p class="i1">
+    <b>Save to:</b>
+    Used to specify whether the target product should be saved to the file system. The
+    combo box presents a list of file formats, currently
+    BEAM-DIMAP, GeoTIFF, and HDF5.
+</p>
+
+<p class="i1">
+    <b>Open in VISAT:</b>
+    Used to specify whether the target product should be opened in VISAT. When the
+    the target product is not saved, it is opened in VISAT automatically.
+</p>
+
+
+<h4>Processing Parameters</h4>
+
+<p>
+    Selecting the <b>Processing Parameters</b> tab in the
+    Scape-M Processing Dialog switches to the following view:
+</p>
+
+<p align="center">
+    <img src="images/ScapeMProcessingDialog_procparms.png" alt="Scape-M Processing Parameters"/>
+</p>
+
+<h5>Parameters</h5>
+
+<!--<p class="i1">-->
+    <!--<b>Compute over all waters (not just over lakes): </b>-->
+    <!--If selected, the processor will, although not primarily designed for this purpose, be applied over-->
+    <!--all water surfaces (i.e. open oceans) instead of only over inland lakes and coastal waters.-->
+<!--</p>-->
+
+<p class="i1">
+    <b>Use GETASSE30 DEM: </b>
+    If selected, the processor will get the required pixel altitude information from the GETASSE30
+    Digital Elevation Model. If not selected or if GETASSE30 is not installed, the information is taken
+    from an available altitude band (if created earlier for this product), or a tie point grid.
+</p>
+
+<p class="i1">
+    <b>Write rhoToa: </b>
+    If selected, the processor will write the TOA reflectances (an intermediate result of the algorithm)
+    to the target product for comparison purposes.
+</p>
+
+<p class="i1">
+    <b>Write 443nm reflectance band: </b>
+    If selected, the processor will write the atmosphere-corrected band 2 (443nm) to the target product,
+    although the atmospheric correction for this band is known to be a problem in the algorithm. In
+    opposite to the description in [1], the original retrieval will be written, and no interpolation
+    is applied.
+</p>
+
+
+<h4>Menu Bar</h4>
+<h5>'File' Menu</h5>
+
+<p>
+    Selecting the <b>File</b> entry in the Menu Bar opens the following view:
+</p>
+
+<p align="center">
+    <img src="images/file_menu.png" alt="File Menu"/>
+</p>
+
+<p class="i1">
+    <b>Open Parameters...:</b>
+    When this entry is selected, an 'Open File' dialog will appear.
+    Here, a BEAM GPF parameters XML file can be selected, containing
+    Scape-M processing parameters which were saved earlier.
+    These parameters will be loaded and applied for an upcoming processing.
+</p>
+
+<p class="i1">
+    <b>Save Parameters...:</b>
+    When this entry is selected, a 'Save File' dialog will appear.
+    Here, the current set of BEAM GPF parameters can be saved into a
+    BEAM GPF parameters XML file for later re-usage.
+</p>
+
+<p class="i1">
+    <b>Display Parameters...:</b>
+    When this entry is selected, the current set of BEAM GPF parameters
+    will be displayed in XML format (see below).
+</p>
+
+<p align="center">
+    <img src="images/file_menu_display_params.png" alt="File Menu Display Parms"/>
+</p>
+
+
+<h5>'Help' Menu</h5>
+
+<p>
+    Selecting the <b>Help</b> entry in the Menu Bar opens the following view:
+</p>
+
+<p align="center">
+    <img src="images/help_menu.png" alt="Help Menu"/>
+</p>
+
+<p class="i1">
+    <b>Help:</b>
+    When this entry is selected, this online help is opened
+    in a separate window.
+</p>
+
+<p class="i1">
+    <b>About...:</b>
+    When this entry is selected, an 'About' dialog for the current
+    processor is opened (see below).
+</p>
+
+<p align="center">
+    <img src="images/help_menu_about.png" alt="Help Menu About"/>
+</p>
+
+
+<h4>Button Group</h4>
+
+<p align="center">
+    <img src="images/button_group.png" alt="Button Group"/>
+</p>
+
+<p class="i1">
+    <b>Run:</b>
+    When this button is clicked, the processing will be started with the selected
+    parameters.
+</p>
+
+<p class="i1">
+    <b>Close:</b>
+    When this button is clicked, the processor toolwindow will be closed.
+</p>
+
+<br>
+<hr>
+
+
+<!-------- Command line --------------------------------------->
+<h3>Processing from Command Line</h3>
+
+Since the Scape-M Processor makes use of the BEAM graph processing framework, it can be
+used also with the 'gpt' command line tool outside BEAM-VISAT. The graph processing is invoked
+by the command
+<div class="itemizedlist">
+    <ul type="bullet">
+        <li style="list-style-type: disc">
+            ${BEAM-INSTALL-DIR}/bin/gpt
+        </li>
+    </ul>
+</div>
+
+To obtain general help on the graph processing, use the command
+<div class="itemizedlist">
+    <ul type="bullet">
+        <li style="list-style-type: disc">
+            ${BEAM-INSTALL-DIR}/bin/gpt -h
+        </li>
+    </ul>
+</div>
+
+Specific help on the Scape-M processor can be obtained with
+<div class="itemizedlist">
+    <ul type="bullet">
+        <li style="list-style-type: disc">
+            ${BEAM-INSTALL-DIR}/bin/gpt -h beam.scapeM
+        </li>
+    </ul>
+</div>
+Information on the usage and a list of all available parameters are given.
+
+<p align="center">
+    <img src="images/gpt_scapem.png" alt="Scape-M Usage"/>
+</p>
+<br>
+
+<br><br>
+The processing from the command line can also be invoked using graph XML files.
+For example, a Scape-M computation for a MERIS L1b RR test data product could be started with
+<div class="itemizedlist">
+    <ul type="bullet">
+        <li style="list-style-type: disc">
+            ${BEAM-INSTALL-DIR}/bin/gpt test_scapem.xml -SMERIS_L1b=./MER_RR_ScapeM_test.dim
+
+        </li>
+    </ul>
+</div>
+with an input file 'MER_RR_ScapeM_test.dim' in the current directory,
+and a graph XML file 'test_scapem.xml' as shown below.
+
+<p align="center">
+    <img src="images/gpt_scapem_xml.png" alt="Scape-M XML"/>
+</p>
+
+<hr>
+</body>
+</html>
