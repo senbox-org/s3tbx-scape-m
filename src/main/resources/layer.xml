@@ -7,9 +7,9 @@
                 <attr name="delegate" methodvalue="org.esa.snap.core.gpf.ui.DefaultOperatorAction.create"/>
                 <attr name="displayName" stringvalue="SCAPE-M"/>
                 <attr name="dialogTitle" stringvalue="SCAPE-M"/>
-                <attr name="operatorName" stringvalue="beam.scapeM"/>
+                <attr name="operatorName" stringvalue="snap.scapeM"/>
                 <attr name="helpId" stringvalue="ScapeMOp"/>
-                <attr name="targetProductNameSuffix" stringvalue="_scapeMBasic"/>
+                <attr name="targetProductNameSuffix" stringvalue="_scapeM"/>
             </file>
 
             <!--<file name="org-esa-s3tbx-scapem-operator-ScapeMAtmosCorrOpAction.instance">-->

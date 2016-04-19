@@ -16,10 +16,6 @@ public class ClearLandPixelStrategy implements ClearPixelStrategy{
 
     private Tile tile;
 
-    public ClearLandPixelStrategy() {
-
-    }
-
     @Override
     public boolean isValid(int x, int y) {
         int sampleInt = tile.getSampleInt(x, y);

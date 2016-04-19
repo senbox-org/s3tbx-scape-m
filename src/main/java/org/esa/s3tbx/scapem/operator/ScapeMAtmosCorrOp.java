@@ -7,6 +7,7 @@ import org.esa.s3tbx.scapem.io.LutAccess;
 import org.esa.s3tbx.scapem.util.ClearLandAndWaterPixelStrategy;
 import org.esa.s3tbx.scapem.util.ClearPixelStrategy;
 import org.esa.s3tbx.scapem.util.ClearLandPixelStrategy;
+import org.esa.s3tbx.scapem.util.ScapeMUtils;
 import org.esa.snap.core.datamodel.Band;
 import org.esa.snap.core.datamodel.GeoCoding;
 import org.esa.snap.core.datamodel.Product;
@@ -82,14 +83,7 @@ public class ScapeMAtmosCorrOp extends ScapeMMerisBasisOp {
 
     @Override
     public void initialize() throws OperatorException {
-        if (useDEM) {
-            String demName = ScapeMConstants.DEFAULT_DEM_NAME;
-            final ElevationModelDescriptor demDescriptor = ElevationModelRegistry.getInstance().getDescriptor(demName);
-            if (demDescriptor == null || !demDescriptor.getDemInstallDir().isFile()) {
-                throw new OperatorException("DEM not installed: " + demName + ". Please install with Module Manager.");
-            }
-            elevationModel = demDescriptor.createDem(Resampling.BILINEAR_INTERPOLATION);
-        }
+        elevationModel = ScapeMUtils.getElevationModel(useDEM);
         createTargetProduct();
     }
 
@@ -175,6 +169,7 @@ public class ScapeMAtmosCorrOp extends ScapeMMerisBasisOp {
                                     scapeMLut.getHsfArrayLUT()[k],
                                     scapeMLut.getVisArrayLUT()[j],
                                     scapeMLut.getCwvArrayLUT()[i]);
+
                             lpw[bandId][i][j][k] = fInt[bandId][0];
                             e0tw[bandId][i][j][k] = fInt[bandId][1];
                             ediftw[bandId][i][j][k] = fInt[bandId][2];

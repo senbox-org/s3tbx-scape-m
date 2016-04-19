@@ -111,6 +111,7 @@ public class FubScapeMClassificationOp extends Operator {
             }
         };
 
+        // todo mba/* check if is called
         basisOp.renameL1bMaskNames(targetProduct);
         setTargetProduct(targetProduct);
     }

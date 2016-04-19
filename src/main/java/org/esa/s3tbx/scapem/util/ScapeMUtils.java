@@ -1,5 +1,12 @@
 package org.esa.s3tbx.scapem.util;
 
+import org.esa.s3tbx.scapem.ScapeMConstants;
+import org.esa.snap.core.dataop.dem.ElevationModel;
+import org.esa.snap.core.dataop.dem.ElevationModelDescriptor;
+import org.esa.snap.core.dataop.dem.ElevationModelRegistry;
+import org.esa.snap.core.dataop.resamp.Resampling;
+import org.esa.snap.core.gpf.OperatorException;
+
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.operator.MeanDescriptor;
@@ -94,7 +101,7 @@ public class ScapeMUtils {
         for (double d : src) {
             diffSqr += Math.pow(d - mean, 2.0);
         }
-        return Math.sqrt(diffSqr/(src.length-1));
+        return Math.sqrt(diffSqr / (src.length - 1));
     }
 
     // todo: check if still needed
@@ -127,5 +134,16 @@ public class ScapeMUtils {
         return sum;
     }
 
+    public static ElevationModel getElevationModel(boolean useDEM) {
+        if (useDEM) {
+            String demName = ScapeMConstants.DEFAULT_DEM_NAME;
+            final ElevationModelDescriptor demDescriptor = ElevationModelRegistry.getInstance().getDescriptor(demName);
+            if (demDescriptor == null || !demDescriptor.getDemInstallDir().isFile()) {
+                throw new OperatorException("DEM not installed: " + demName + ". Please install with Module Manager.");
+            }
+            return demDescriptor.createDem(Resampling.BILINEAR_INTERPOLATION);
+        }
+        return null;
+    }
 
 }

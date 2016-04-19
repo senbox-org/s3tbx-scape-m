@@ -70,17 +70,13 @@ public class ScapeMVis2AotOp extends ScapeMMerisBasisOp {
 
     @Override
     public void computeTile(Band targetBand, Tile targetTile, ProgressMonitor pm) throws OperatorException {
-
-        final Rectangle targetRect = targetTile.getRectangle();
         final GeoCoding geoCoding = sourceProduct.getSceneGeoCoding();
+        final Rectangle targetRect = targetTile.getRectangle();
+        final Tile altitudeTile = getAltitudeTile(targetRect, sourceProduct, useDEM);
+        final Band visibilityBand = visibilityProduct.getBand(ScapeMConstants.VISIBILITY_BAND_NAME);
+        final Tile visibilityTile = getSourceTile(visibilityBand, targetRect);
+        final double[][] hsurfArrayCell;
 
-        Tile altitudeTile = getAltitudeTile(targetRect, sourceProduct, useDEM);
-
-        Band visibilityBand = visibilityProduct.getBand(ScapeMConstants.VISIBILITY_BAND_NAME);
-        Tile visibilityTile = getSourceTile(visibilityBand, targetRect);
-
-
-        double[][] hsurfArrayCell;
         pm.beginTask("Processing frame...", targetRect.height + 1);
         try {
             if (useDEM && altitudeTile == null) {
@@ -103,7 +99,7 @@ public class ScapeMVis2AotOp extends ScapeMMerisBasisOp {
                 }
                 pm.worked(1);
             }
-        } catch (Exception e) {
+        } catch (OperatorException e) {
             // todo
             e.printStackTrace();
         } finally {

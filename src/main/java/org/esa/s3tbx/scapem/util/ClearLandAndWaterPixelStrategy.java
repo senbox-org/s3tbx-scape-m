@@ -16,9 +16,6 @@ public class ClearLandAndWaterPixelStrategy implements ClearPixelStrategy {
 
     private Tile tile;
 
-    public ClearLandAndWaterPixelStrategy() {
-    }
-
     @Override
     public boolean isValid(int x, int y) {
         int sampleInt = tile.getSampleInt(x, y);

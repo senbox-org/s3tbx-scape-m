@@ -4,6 +4,7 @@ import com.bc.ceres.core.ProgressMonitor;
 import org.esa.s3tbx.meris.brr.HelperFunctions;
 import org.esa.s3tbx.scapem.ScapeMConstants;
 import org.esa.s3tbx.scapem.util.ClearPixelStrategy;
+import org.esa.s3tbx.scapem.util.ScapeMUtils;
 import org.esa.snap.core.datamodel.Band;
 import org.esa.snap.core.datamodel.GeoCoding;
 import org.esa.snap.core.datamodel.Product;
@@ -60,17 +61,11 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
 
     @Override
     public void initialize() throws OperatorException {
-        if (useDEM) {
-            String demName = ScapeMConstants.DEFAULT_DEM_NAME;
-            final ElevationModelDescriptor demDescriptor = ElevationModelRegistry.getInstance().getDescriptor(demName);
-            if (demDescriptor == null || !demDescriptor.getDemInstallDir().isFile()) {
-                throw new OperatorException("DEM not installed: " + demName + ". Please install with Module Manager.");
-            }
-            elevationModel = demDescriptor.createDem(Resampling.BILINEAR_INTERPOLATION);
-        }
-
+        elevationModel = ScapeMUtils.getElevationModel(useDEM);
         createTargetProduct();
     }
+
+
 
     @Override
     public void computeTile(Band targetBand, Tile targetTile, ProgressMonitor pm) throws OperatorException {
@@ -116,8 +111,6 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
             final double sza = szaTile.getSampleDouble(centerX, centerY);
             final double vaa = vaaTile.getSampleDouble(centerX, centerY);
             final double saa = saaTile.getSampleDouble(centerX, centerY);
-            //todo 3 mba/** This is the only usage of brr module, inline method. 14.04.2016
-            final double phi = HelperFunctions.computeAzimuthDifference(vaa, saa);
 
             try {
                 double[][] hsurfArrayCell;
@@ -129,8 +122,6 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
 
                 final double hsurfMeanCell = ScapeMAlgorithm.getHsurfMeanCell(hsurfArrayCell, targetRect, clearPixelStrategy);
 
-                final double[][] cosSzaArrayCell = ScapeMAlgorithm.getCosSzaArrayCell(targetRect, szaTile);
-                final double cosSzaMeanCell = ScapeMAlgorithm.getCosSzaMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
 
 
                 final int doy = sourceProduct.getStartTime().getAsCalendar().get(Calendar.DAY_OF_YEAR);
@@ -141,9 +132,12 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
                 }
 
                 // now get visibility estimate...
-                final boolean cellIsClear45Percent =
-                        ScapeMAlgorithm.isCellClearLand(targetRect, clearPixelStrategy, 0.45);
 
+                final boolean cellIsClear45Percent =ScapeMAlgorithm.isCellClearLand(targetRect, clearPixelStrategy, 0.45);
+                final double[][] cosSzaArrayCell = ScapeMAlgorithm.getCosSzaArrayCell(targetRect, szaTile);
+                final double cosSzaMeanCell = ScapeMAlgorithm.getCosSzaMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
+                //todo 3 mba/** This is the only usage of brr module, inline method. 14.04.2016
+                final double phi = HelperFunctions.computeAzimuthDifference(vaa, saa);
                 final double visibility = ScapeMAlgorithm.getCellVisibility(toaArrayCell,
                         toaMinCell, vza, sza, phi,
                         hsurfArrayCell,
@@ -154,8 +148,7 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
                         scapeMLut);
 
                 setCellVisibilitySamples(targetTile, targetRect, visibility);
-            } catch (Exception e) {
-                // todo
+            } catch (OperatorException e) {
                 e.printStackTrace();
                 setCellVisibilitySamples(targetTile, targetRect, ScapeMConstants.AOT_NODATA_VALUE);
             }
