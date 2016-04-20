@@ -1,6 +1,7 @@
 package org.esa.s3tbx.scapem.operator;
 
 import org.esa.s3tbx.scapem.ScapeMConstants;
+import org.esa.s3tbx.scapem.util.ScapeMUtils;
 import org.esa.snap.core.datamodel.Band;
 import org.esa.snap.core.datamodel.Product;
 import org.esa.snap.core.datamodel.ProductData;
@@ -23,21 +24,21 @@ public class ScapeMGapFillTest {
 
     @Test
     public void testGetMinimumDistanceToEdge() {
-        assertEquals(0, ScapeMGapFill.getMinimumDistanceToEdge(0, 0, 5, 5), 1e-8);
-        assertEquals(0, ScapeMGapFill.getMinimumDistanceToEdge(0, 1, 5, 5), 1e-8);
-        assertEquals(0, ScapeMGapFill.getMinimumDistanceToEdge(1, 0, 5, 5), 1e-8);
-        assertEquals(1, ScapeMGapFill.getMinimumDistanceToEdge(1, 1, 5, 5), 1e-8);
-        assertEquals(0, ScapeMGapFill.getMinimumDistanceToEdge(4, 4, 5, 5), 1e-8);
-        assertEquals(0, ScapeMGapFill.getMinimumDistanceToEdge(3, 4, 5, 5), 1e-8);
-        assertEquals(0, ScapeMGapFill.getMinimumDistanceToEdge(4, 3, 5, 5), 1e-8);
-        assertEquals(1, ScapeMGapFill.getMinimumDistanceToEdge(3, 3, 5, 5), 1e-8);
-        assertEquals(-1, ScapeMGapFill.getMinimumDistanceToEdge(-1, 3, 5, 5), 1e-8);
-        assertEquals(-1, ScapeMGapFill.getMinimumDistanceToEdge(3, -1, 5, 5), 1e-8);
-        assertEquals(-1, ScapeMGapFill.getMinimumDistanceToEdge(3, 5, 5, 5), 1e-8);
-        assertEquals(-1, ScapeMGapFill.getMinimumDistanceToEdge(5, 3, 5, 5), 1e-8);
-        assertEquals(2, ScapeMGapFill.getMinimumDistanceToEdge(2, 2, 5, 5), 1e-8);
-        assertEquals(2, ScapeMGapFill.getMinimumDistanceToEdge(3, 3, 6, 6), 1e-8);
-        assertEquals(3, ScapeMGapFill.getMinimumDistanceToEdge(3, 3, 7, 7), 1e-8);
+        assertEquals(0, ScapeMUtils.getMinimumDistanceToEdge(0, 0, 5, 5), 1e-8);
+        assertEquals(0, ScapeMUtils.getMinimumDistanceToEdge(0, 1, 5, 5), 1e-8);
+        assertEquals(0, ScapeMUtils.getMinimumDistanceToEdge(1, 0, 5, 5), 1e-8);
+        assertEquals(1, ScapeMUtils.getMinimumDistanceToEdge(1, 1, 5, 5), 1e-8);
+        assertEquals(0, ScapeMUtils.getMinimumDistanceToEdge(4, 4, 5, 5), 1e-8);
+        assertEquals(0, ScapeMUtils.getMinimumDistanceToEdge(3, 4, 5, 5), 1e-8);
+        assertEquals(0, ScapeMUtils.getMinimumDistanceToEdge(4, 3, 5, 5), 1e-8);
+        assertEquals(1, ScapeMUtils.getMinimumDistanceToEdge(3, 3, 5, 5), 1e-8);
+        assertEquals(-1, ScapeMUtils.getMinimumDistanceToEdge(-1, 3, 5, 5), 1e-8);
+        assertEquals(-1, ScapeMUtils.getMinimumDistanceToEdge(3, -1, 5, 5), 1e-8);
+        assertEquals(-1, ScapeMUtils.getMinimumDistanceToEdge(3, 5, 5, 5), 1e-8);
+        assertEquals(-1, ScapeMUtils.getMinimumDistanceToEdge(5, 3, 5, 5), 1e-8);
+        assertEquals(2, ScapeMUtils.getMinimumDistanceToEdge(2, 2, 5, 5), 1e-8);
+        assertEquals(2, ScapeMUtils.getMinimumDistanceToEdge(3, 3, 6, 6), 1e-8);
+        assertEquals(3, ScapeMUtils.getMinimumDistanceToEdge(3, 3, 7, 7), 1e-8);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.esa.s3tbx.scapem.util;
 
 import org.esa.s3tbx.scapem.ScapeMConstants;
+import org.esa.snap.core.datamodel.Product;
 import org.esa.snap.core.dataop.dem.ElevationModel;
 import org.esa.snap.core.dataop.dem.ElevationModelDescriptor;
 import org.esa.snap.core.dataop.dem.ElevationModelRegistry;
@@ -146,4 +147,15 @@ public class ScapeMUtils {
         return null;
     }
 
+    public static int getMinimumDistanceToEdge(int x, int y, int numberOfCellColumns, int numberOfCellRows) {
+        return Math.min(x, Math.min(y, Math.min(numberOfCellColumns - 1 - x, numberOfCellRows - 1 - y)));
+    }
+
+
+    public static Product createSimpleTargetProduct(Product sourceProduct) {
+        return new Product(sourceProduct.getName(),
+                sourceProduct.getProductType(),
+                sourceProduct.getSceneRasterWidth(),
+                sourceProduct.getSceneRasterHeight());
+    }
 }

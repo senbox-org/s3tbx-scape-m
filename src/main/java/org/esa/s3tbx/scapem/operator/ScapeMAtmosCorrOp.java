@@ -13,9 +13,6 @@ import org.esa.snap.core.datamodel.GeoCoding;
 import org.esa.snap.core.datamodel.Product;
 import org.esa.snap.core.datamodel.ProductData;
 import org.esa.snap.core.dataop.dem.ElevationModel;
-import org.esa.snap.core.dataop.dem.ElevationModelDescriptor;
-import org.esa.snap.core.dataop.dem.ElevationModelRegistry;
-import org.esa.snap.core.dataop.resamp.Resampling;
 import org.esa.snap.core.gpf.OperatorException;
 import org.esa.snap.core.gpf.OperatorSpi;
 import org.esa.snap.core.gpf.Tile;
@@ -116,7 +113,6 @@ public class ScapeMAtmosCorrOp extends ScapeMMerisBasisOp {
         }
 
         Band visibilityBand = visibilityProduct.getBand(ScapeMConstants.VISIBILITY_BAND_NAME);
-        Tile visibilityTile = getSourceTile(visibilityBand, targetRect);
 
         final int centerX = targetRect.x + targetRect.width / 2;
         final int centerY = targetRect.y + targetRect.height / 2;
@@ -135,9 +131,9 @@ public class ScapeMAtmosCorrOp extends ScapeMMerisBasisOp {
                 hsurfArrayCell = ScapeMAlgorithm.getHsurfArrayCell(targetRect, geoCoding, altitudeTile, scapeMLut);
             }
 
-            final double hsurfMeanCell = ScapeMAlgorithm.getHsurfMeanCell(hsurfArrayCell, targetRect, clearPixelStrategy);
+            final double hsurfMeanCell = ScapeMAlgorithm.getMeanCell(hsurfArrayCell, targetRect, clearPixelStrategy);
             final double[][] cosSzaArrayCell = ScapeMAlgorithm.getCosSzaArrayCell(targetRect, szaTile);
-            final double cosSzaMeanCell = ScapeMAlgorithm.getCosSzaMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
+            final double cosSzaMeanCell = ScapeMAlgorithm.getMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
 
             final int doy = sourceProduct.getStartTime().getAsCalendar().get(Calendar.DAY_OF_YEAR);
             double[][][] toaArrayCell = new double[ScapeMConstants.L1_BAND_NUM][targetRect.width][targetRect.height];
@@ -181,6 +177,7 @@ public class ScapeMAtmosCorrOp extends ScapeMMerisBasisOp {
                 }
             }
 
+            final Tile visibilityTile = getSourceTile(visibilityBand, targetRect);
             ScapeMResult acResult;
             double[][] fInt = LutAccess.interpolAtmParamLut(scapeMLut.getAtmParamLut(),
                     vza, sza, phi, hsurfMeanCell,
@@ -202,7 +199,7 @@ public class ScapeMAtmosCorrOp extends ScapeMMerisBasisOp {
                     lpw, e0tw, ediftw, tDirD, sab);
 
 
-            Tile wvTile = targetTiles.get(targetProduct.getBand(ScapeMConstants.WATER_VAPOUR_BAND_NAME));
+            final Tile wvTile = targetTiles.get(targetProduct.getBand(ScapeMConstants.WATER_VAPOUR_BAND_NAME));
             for (int y = targetRect.y; y < targetRect.y + targetRect.height; y++) {
                 for (int x = targetRect.x; x < targetRect.x + targetRect.width; x++) {
                     wvTile.setSample(x, y, acResult.getWvPixel(x - targetRect.x, y - targetRect.y));

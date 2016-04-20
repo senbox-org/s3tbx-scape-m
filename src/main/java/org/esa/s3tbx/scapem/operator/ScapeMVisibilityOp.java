@@ -10,9 +10,6 @@ import org.esa.snap.core.datamodel.GeoCoding;
 import org.esa.snap.core.datamodel.Product;
 import org.esa.snap.core.datamodel.ProductData;
 import org.esa.snap.core.dataop.dem.ElevationModel;
-import org.esa.snap.core.dataop.dem.ElevationModelDescriptor;
-import org.esa.snap.core.dataop.dem.ElevationModelRegistry;
-import org.esa.snap.core.dataop.resamp.Resampling;
 import org.esa.snap.core.gpf.OperatorException;
 import org.esa.snap.core.gpf.OperatorSpi;
 import org.esa.snap.core.gpf.Tile;
@@ -66,7 +63,6 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
     }
 
 
-
     @Override
     public void computeTile(Band targetBand, Tile targetTile, ProgressMonitor pm) throws OperatorException {
 
@@ -112,46 +108,38 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
             final double vaa = vaaTile.getSampleDouble(centerX, centerY);
             final double saa = saaTile.getSampleDouble(centerX, centerY);
 
-            try {
-                double[][] hsurfArrayCell;
-                if (useDEM && altitudeTile == null) {
-                    hsurfArrayCell = ScapeMAlgorithm.getHsurfArrayCell(targetRect, geoCoding, elevationModel, scapeMLut);
-                } else {
-                    hsurfArrayCell = ScapeMAlgorithm.getHsurfArrayCell(targetRect, geoCoding, altitudeTile, scapeMLut);
-                }
-
-                final double hsurfMeanCell = ScapeMAlgorithm.getHsurfMeanCell(hsurfArrayCell, targetRect, clearPixelStrategy);
-
-
-
-                final int doy = sourceProduct.getStartTime().getAsCalendar().get(Calendar.DAY_OF_YEAR);
-                double[][][] toaArrayCell = new double[ScapeMConstants.L1_BAND_NUM][targetRect.width][targetRect.height];
-                for (int bandId = 0; bandId < ScapeMConstants.L1_BAND_NUM; bandId++) {
-                    toaArrayCell[bandId] = ScapeMAlgorithm.getToaArrayCell(radianceTiles[bandId], targetRect, doy);
-                    toaMinCell[bandId] = ScapeMAlgorithm.getToaMinCell(toaArrayCell[bandId]);
-                }
-
-                // now get visibility estimate...
-
-                final boolean cellIsClear45Percent =ScapeMAlgorithm.isCellClearLand(targetRect, clearPixelStrategy, 0.45);
-                final double[][] cosSzaArrayCell = ScapeMAlgorithm.getCosSzaArrayCell(targetRect, szaTile);
-                final double cosSzaMeanCell = ScapeMAlgorithm.getCosSzaMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
-                //todo 3 mba/** This is the only usage of brr module, inline method. 14.04.2016
-                final double phi = HelperFunctions.computeAzimuthDifference(vaa, saa);
-                final double visibility = ScapeMAlgorithm.getCellVisibility(toaArrayCell,
-                        toaMinCell, vza, sza, phi,
-                        hsurfArrayCell,
-                        hsurfMeanCell,
-                        cosSzaArrayCell,
-                        cosSzaMeanCell,
-                        cellIsClear45Percent,
-                        scapeMLut);
-
-                setCellVisibilitySamples(targetTile, targetRect, visibility);
-            } catch (OperatorException e) {
-                e.printStackTrace();
-                setCellVisibilitySamples(targetTile, targetRect, ScapeMConstants.AOT_NODATA_VALUE);
+            double[][] hsurfArrayCell;
+            if (useDEM && altitudeTile == null) {
+                hsurfArrayCell = ScapeMAlgorithm.getHsurfArrayCell(targetRect, geoCoding, elevationModel, scapeMLut);
+            } else {
+                hsurfArrayCell = ScapeMAlgorithm.getHsurfArrayCell(targetRect, geoCoding, altitudeTile, scapeMLut);
             }
+
+            final int doy = sourceProduct.getStartTime().getAsCalendar().get(Calendar.DAY_OF_YEAR);
+            double[][][] toaArrayCell = new double[ScapeMConstants.L1_BAND_NUM][targetRect.width][targetRect.height];
+            for (int bandId = 0; bandId < ScapeMConstants.L1_BAND_NUM; bandId++) {
+                toaArrayCell[bandId] = ScapeMAlgorithm.getToaArrayCell(radianceTiles[bandId], targetRect, doy);
+                toaMinCell[bandId] = ScapeMAlgorithm.getToaMinCell(toaArrayCell[bandId]);
+            }
+
+            // now get visibility estimate...
+
+            final double hsurfMeanCell = ScapeMAlgorithm.getMeanCell(hsurfArrayCell, targetRect, clearPixelStrategy);
+            final boolean cellIsClear45Percent = ScapeMAlgorithm.isCellClearLand(targetRect, clearPixelStrategy, 0.45);
+            final double[][] cosSzaArrayCell = ScapeMAlgorithm.getCosSzaArrayCell(targetRect, szaTile);
+            final double cosSzaMeanCell = ScapeMAlgorithm.getMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
+            //todo 3 mba/** This is the only usage of brr module, inline method. 14.04.2016
+            final double phi = HelperFunctions.computeAzimuthDifference(vaa, saa);
+            final double visibility = ScapeMAlgorithm.getCellVisibility(toaArrayCell,
+                    toaMinCell, vza, sza, phi,
+                    hsurfArrayCell,
+                    hsurfMeanCell,
+                    cosSzaArrayCell,
+                    cosSzaMeanCell,
+                    cellIsClear45Percent,
+                    scapeMLut);
+
+            setCellVisibilitySamples(targetTile, targetRect, visibility);
         } else {
             setCellVisibilitySamples(targetTile, targetRect, ScapeMConstants.AOT_NODATA_VALUE);
         }

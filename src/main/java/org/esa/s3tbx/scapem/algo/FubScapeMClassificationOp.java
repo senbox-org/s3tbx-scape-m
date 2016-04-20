@@ -19,6 +19,7 @@ package org.esa.s3tbx.scapem.algo;
 import com.bc.ceres.core.ProgressMonitor;
 import org.esa.s3tbx.idepix.operators.BasisOp;
 import org.esa.s3tbx.meris.l2auxdata.Constants;
+import org.esa.s3tbx.scapem.util.ScapeMUtils;
 import org.esa.snap.core.datamodel.Band;
 import org.esa.snap.core.datamodel.FlagCoding;
 import org.esa.snap.core.datamodel.GeoCoding;
@@ -83,10 +84,7 @@ public class FubScapeMClassificationOp extends Operator {
         if (!geoCoding.canGetGeoPos()) {
             throw new OperatorException("Source product has no usable geocoding");
         }
-        Product targetProduct = new Product(sourceProduct.getName(),
-                sourceProduct.getProductType(),
-                sourceProduct.getSceneRasterWidth(),
-                sourceProduct.getSceneRasterHeight());
+        Product targetProduct = ScapeMUtils.createSimpleTargetProduct(sourceProduct);
 
         final Band flagBand = targetProduct.addBand(IDEPIX_CLOUD_FLAGS, ProductData.TYPE_INT16);
         final FlagCoding flagCoding = createScapeMFlagCoding(IDEPIX_CLOUD_FLAGS);
@@ -104,15 +102,6 @@ public class FubScapeMClassificationOp extends Operator {
         }
 
         rad2reflProduct = computeRadiance2ReflectanceProduct(sourceProduct);
-        BasisOp basisOp = new BasisOp() {
-            @Override
-            public void initialize() throws OperatorException {
-
-            }
-        };
-
-        // todo mba/* check if is called
-        basisOp.renameL1bMaskNames(targetProduct);
         setTargetProduct(targetProduct);
     }
 
@@ -170,15 +159,16 @@ public class FubScapeMClassificationOp extends Operator {
             final Band reflBand = rad2reflProduct.getBand(REFLECTANCE_BAND_PREFIX + i);
             reflectanceTiles[i - 1] = getSourceTile(reflBand, rectangle);
         }
+
         final Band refl13Band = rad2reflProduct.getBand(REFLECTANCE_BAND_PREFIX + 13);
-        reflectanceTiles[num_of_visible_bands + 1] = getSourceTile(refl13Band, rectangle);
         final TiePointGrid altitudeGrid = sourceProduct.getTiePointGrid(EnvisatConstants.MERIS_DEM_ALTITUDE_DS_NAME);
-        Tile altitudeTile = getSourceTile(altitudeGrid, rectangle);
         final Band l1FlagsBand = sourceProduct.getBand(EnvisatConstants.MERIS_L1B_FLAGS_DS_NAME);
         final Tile l1FlagsTile = getSourceTile(l1FlagsBand, rectangle);
-        TiePointGrid sunZenithGrid = sourceProduct.getTiePointGrid(EnvisatConstants.MERIS_SUN_ZENITH_DS_NAME);
+        final TiePointGrid sunZenithGrid = sourceProduct.getTiePointGrid(EnvisatConstants.MERIS_SUN_ZENITH_DS_NAME);
         final Tile sunZenithTile = getSourceTile(sunZenithGrid, rectangle);
+        final Tile altitudeTile = getSourceTile(altitudeGrid, rectangle);
 
+        reflectanceTiles[num_of_visible_bands + 1] = getSourceTile(refl13Band, rectangle);
         Tile waterTile = null;
         if (calculateLakes) {
             waterTile = getSourceTile(waterProduct.getRasterDataNode("water_flags"), rectangle);

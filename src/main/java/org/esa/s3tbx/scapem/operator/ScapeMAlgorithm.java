@@ -59,9 +59,9 @@ public class ScapeMAlgorithm {
      * @param clearPixelStrategy - strategy how clear pixels are determined
      * @return double - the cell mean value
      */
-    static double getHsurfMeanCell(double[][] hSurfCell,
-                                   Rectangle rectangle,
-                                   ClearPixelStrategy clearPixelStrategy) {
+    static double getMeanCell(double[][] hSurfCell,
+                              Rectangle rectangle,
+                              ClearPixelStrategy clearPixelStrategy) {
 
         double hsurfMean = 0.0;
         int hsurfCount = 0;
@@ -144,32 +144,6 @@ public class ScapeMAlgorithm {
         return hSurf;
     }
 
-    /**
-     * Returns the cos(SZA) mean value over all land pixels in a 30x30km cell
-     *
-     * @param cosSzaCell         - hsurf single values
-     * @param clearPixelStrategy - strategy how clear pixels are determined
-     * @return double - the cell mean value
-     */
-    static double getCosSzaMeanCell(double[][] cosSzaCell,
-                                    Rectangle rect,
-                                    ClearPixelStrategy clearPixelStrategy) {
-
-        double cosSzaMean = 0.0;
-        int cosSzaCount = 0;
-        for (int y = 0; y < cosSzaCell[0].length; y++) {
-            for (int x = 0; x < cosSzaCell.length; x++) {
-                if (!(Double.isNaN(cosSzaCell[x][y]))) {
-                    if (clearPixelStrategy.isValid(rect.x + x, rect.y + y)) {
-                        cosSzaMean += cosSzaCell[x][y];
-                        cosSzaCount++;
-                    }
-                }
-            }
-        }
-
-        return cosSzaMean / cosSzaCount;
-    }
 
     /**
      * Returns the cos(SZA) array in a 30x30km cell
@@ -304,13 +278,8 @@ public class ScapeMAlgorithm {
                     visVal = computeRefinedVisibility(visVal, refPixels, vza, sza, raa, hsurfMeanCell, wvInit,
                             cosSzaMeanCell, scapeMLut);
                 }
-            } else {
-                // nothing to do - keep visVal as it was before
             }
-        } else {
-            // nothing to do - keep visVal as it was before
         }
-
         visVal = Math.max(scapeMLut.getVisMin(), Math.min(scapeMLut.getVisMax(), visVal));
 
         return visVal;
@@ -336,10 +305,10 @@ public class ScapeMAlgorithm {
         final double[] hsurfLim = new double[]{0.8 * hsurfMeanCell, 1.2 * hsurfMeanCell};
         final double[] cosSzaLim = new double[]{0.9 * cosSzaMeanCell, 1.1 * cosSzaMeanCell};
 
-        double[][] ndvi = new double[cellWidth][cellHeight];
-        List<CellSample> ndviHighList = new ArrayList<CellSample>();
-        List<CellSample> ndviMediumList = new ArrayList<CellSample>();
-        List<CellSample> ndviLowList = new ArrayList<CellSample>();
+        final double[][] ndvi = new double[cellWidth][cellHeight];
+        final List<CellSample> ndviHighList = new ArrayList<>();
+        final List<CellSample> ndviMediumList = new ArrayList<>();
+        final List<CellSample> ndviLowList = new ArrayList<>();
         for (int j = 0; j < cellHeight; j++) {
             for (int i = 0; i < cellWidth; i++) {
                 final double toa7 = toaArrayCell[7][i][j] / ScapeMConstants.solIrr7;

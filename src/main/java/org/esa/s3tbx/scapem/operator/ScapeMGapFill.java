@@ -1,6 +1,7 @@
 package org.esa.s3tbx.scapem.operator;
 
 import org.esa.s3tbx.scapem.ScapeMConstants;
+import org.esa.s3tbx.scapem.util.ScapeMUtils;
 import org.esa.snap.core.datamodel.Band;
 import org.esa.snap.core.datamodel.Product;
 import org.esa.snap.core.image.ResolutionLevel;
@@ -59,7 +60,7 @@ public class ScapeMGapFill {
                 float cellSample = cellSamples[x][y];
                 if (cellSample == noDataValue) {
                     float interpolationValue;
-                    final int minimumDistanceToEdge = getMinimumDistanceToEdge(x, y,
+                    final int minimumDistanceToEdge = ScapeMUtils.getMinimumDistanceToEdge(x, y,
                                                                                numberOfCellColumns, numberOfCellRows);
                     if (minimumDistanceToEdge >= 2) {
                         interpolationValue = interpolateOverRegion(cellSamples, x, y, 2, noDataValue);
@@ -88,13 +89,6 @@ public class ScapeMGapFill {
         return product;
     }
 
-    /* package local for testing*/
-    static int getMinimumDistanceToEdge(int x, int y, int numberOfCellColumns, int numberOfCellRows) {
-        return Math.min(x,
-                        Math.min(y,
-                                 Math.min(numberOfCellColumns - 1 - x,
-                                          numberOfCellRows - 1 - y)));
-    }
 
     /* package local for testing*/
     static float interpolateOverRegion(float[][] cellSamples,
@@ -125,7 +119,7 @@ public class ScapeMGapFill {
                 final int xAssign = x + i;
                 final int yAssign = y + j;
                 final int minimumDistanceToEdgeAssign
-                        = getMinimumDistanceToEdge(xAssign, yAssign, numberOfCellColumns, numberOfCellRows);
+                        = ScapeMUtils.getMinimumDistanceToEdge(xAssign, yAssign, numberOfCellColumns, numberOfCellRows);
                 if (minimumDistanceToEdgeAssign >= 0) {
                     if (cellSamples[xAssign][yAssign] != noDataValue) {
                         mean += cellSamples[xAssign][yAssign];

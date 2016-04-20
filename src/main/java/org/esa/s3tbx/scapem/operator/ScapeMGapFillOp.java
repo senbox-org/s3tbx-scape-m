@@ -2,6 +2,7 @@ package org.esa.s3tbx.scapem.operator;
 
 import com.bc.ceres.core.ProgressMonitor;
 import org.esa.s3tbx.scapem.ScapeMConstants;
+import org.esa.s3tbx.scapem.util.ScapeMUtils;
 import org.esa.snap.core.datamodel.Band;
 import org.esa.snap.core.datamodel.Product;
 import org.esa.snap.core.datamodel.ProductData;
@@ -91,7 +92,7 @@ public class ScapeMGapFillOp extends ScapeMMerisBasisOp {
             setCellVisibilitySamples(targetTile, targetRect, visCellOrigValue);
         } else {
             // do gap filling by interpolation
-            final int minimumDistanceToEdge = getMinimumDistanceToEdge(tileIndexX,
+            final int minimumDistanceToEdge = ScapeMUtils.getMinimumDistanceToEdge(tileIndexX,
                     tileIndexY,
                     numberOfCellColumns,
                     numberOfCellRows);
@@ -121,10 +122,6 @@ public class ScapeMGapFillOp extends ScapeMMerisBasisOp {
         }
     }
 
-     /* package local for testing*/
-    static int getMinimumDistanceToEdge(int x, int y, int numberOfCellColumns, int numberOfCellRows) {
-        return Math.min(x, Math.min(y, Math.min(numberOfCellColumns - 1 - x, numberOfCellRows - 1 - y)));
-    }
 
     private void createTargetProduct() throws OperatorException {
         targetProduct = createCompatibleProduct(sourceProduct, "MER", "MER_L2");
@@ -191,7 +188,7 @@ public class ScapeMGapFillOp extends ScapeMMerisBasisOp {
                 final int xAssign = x + i;
                 final int yAssign = y + j;
                 final int minimumDistanceToEdgeAssign
-                        = getMinimumDistanceToEdge(xAssign, yAssign, numberOfCellColumns, numberOfCellRows);
+                        = ScapeMUtils.getMinimumDistanceToEdge(xAssign, yAssign, numberOfCellColumns, numberOfCellRows);
                 if (minimumDistanceToEdgeAssign >= 0) {
                     final double visValue = visSourceTile.getSampleDouble(xAssign * tileWidth, yAssign * tileHeight);
                     if (visValue != noDataValue) {

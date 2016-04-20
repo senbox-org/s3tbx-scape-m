@@ -3,6 +3,7 @@ package org.esa.s3tbx.scapem.algo;
 import com.bc.ceres.core.ProgressMonitor;
 import org.esa.s3tbx.idepix.core.IdepixConstants;
 import org.esa.s3tbx.idepix.core.util.IdepixUtils;
+import org.esa.s3tbx.scapem.util.ScapeMUtils;
 import org.esa.snap.core.datamodel.Band;
 import org.esa.snap.core.datamodel.FlagCoding;
 import org.esa.snap.core.datamodel.GeoCoding;
@@ -20,6 +21,7 @@ import org.esa.snap.core.gpf.annotations.SourceProduct;
 import org.esa.snap.core.gpf.annotations.TargetProduct;
 import org.esa.snap.core.util.BitSetter;
 import org.esa.snap.dataio.envisat.EnvisatConstants;
+import org.jetbrains.annotations.NotNull;
 
 
 import java.awt.Color;
@@ -79,10 +81,7 @@ public class FubScapeMLakesOp extends Operator {
         if (!geoSceneCoding.canGetGeoPos()) {
             throw new OperatorException("Source product has no usable geocoding");
         }
-        Product targetProduct = new Product(sourceProduct.getName(),
-                sourceProduct.getProductType(),
-                sourceProduct.getSceneRasterWidth(),
-                sourceProduct.getSceneRasterHeight());
+        Product targetProduct = ScapeMUtils.createSimpleTargetProduct(sourceProduct);
 
         Band flagBand = targetProduct.addBand(WATER_FLAGS, ProductData.TYPE_INT16);
         FlagCoding flagCoding = createScapeMLakesFlagCoding(WATER_FLAGS);
@@ -106,6 +105,7 @@ public class FubScapeMLakesOp extends Operator {
         }
         setTargetProduct(targetProduct);
     }
+
 
     private void setupCloudScreeningBitmasks(Product lakesProduct) {
         int index = 0;
@@ -233,7 +233,7 @@ public class FubScapeMLakesOp extends Operator {
         Tile waterFractionTile = getSourceTile(landWaterMaskProduct.getRasterDataNode(LAND_WATER_FRACTION), rectangle);
         for (Tile.Pos pos : targetTile) {
             final boolean isAlongCoastline = coastRegionData.getSample(pos.x, pos.y, 0) == 1;
-            boolean isOcean;
+            final boolean isOcean;
             boolean isLake = false;
             if (calculateLakes) {
                 int regionID = lakeRegionMatrix[pos.x][pos.y];
