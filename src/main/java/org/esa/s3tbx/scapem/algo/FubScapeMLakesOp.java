@@ -21,7 +21,6 @@ import org.esa.snap.core.gpf.annotations.SourceProduct;
 import org.esa.snap.core.gpf.annotations.TargetProduct;
 import org.esa.snap.core.util.BitSetter;
 import org.esa.snap.dataio.envisat.EnvisatConstants;
-import org.jetbrains.annotations.NotNull;
 
 
 import java.awt.Color;

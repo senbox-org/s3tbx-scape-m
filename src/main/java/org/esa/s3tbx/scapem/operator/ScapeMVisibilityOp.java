@@ -124,10 +124,10 @@ public class ScapeMVisibilityOp extends ScapeMMerisBasisOp {
 
             // now get visibility estimate...
 
-            final double hsurfMeanCell = ScapeMAlgorithm.getMeanCell(hsurfArrayCell, targetRect, clearPixelStrategy);
+            final double hsurfMeanCell = ScapeMAlgorithm.getCellMean(hsurfArrayCell, targetRect, clearPixelStrategy);
             final boolean cellIsClear45Percent = ScapeMAlgorithm.isCellClearLand(targetRect, clearPixelStrategy, 0.45);
             final double[][] cosSzaArrayCell = ScapeMAlgorithm.getCosSzaArrayCell(targetRect, szaTile);
-            final double cosSzaMeanCell = ScapeMAlgorithm.getMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
+            final double cosSzaMeanCell = ScapeMAlgorithm.getCellMean(cosSzaArrayCell, targetRect, clearPixelStrategy);
             //todo 3 mba/** This is the only usage of brr module, inline method. 14.04.2016
             final double phi = HelperFunctions.computeAzimuthDifference(vaa, saa);
             final double visibility = ScapeMAlgorithm.getCellVisibility(toaArrayCell,

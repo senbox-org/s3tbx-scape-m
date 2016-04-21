@@ -53,23 +53,21 @@ public class ScapeMAlgorithm {
     }
 
     /**
-     * Returns the elevation mean value (in km) over all land pixels in a 30x30km cell
-     *
-     * @param hSurfCell          - hsurf single values
+     * @param SurfCells          - surf single values
      * @param clearPixelStrategy - strategy how clear pixels are determined
      * @return double - the cell mean value
      */
-    static double getMeanCell(double[][] hSurfCell,
+    static double getCellMean(double[][] SurfCells,
                               Rectangle rectangle,
                               ClearPixelStrategy clearPixelStrategy) {
 
         double hsurfMean = 0.0;
         int hsurfCount = 0;
-        for (int y = 0; y < hSurfCell[0].length; y++) {
-            for (int x = 0; x < hSurfCell.length; x++) {
-                if (!(Double.isNaN(hSurfCell[x][y]))) {
+        for (int y = 0; y < SurfCells[0].length; y++) {
+            for (int x = 0; x < SurfCells.length; x++) {
+                if (!(Double.isNaN(SurfCells[x][y]))) {
                     if (clearPixelStrategy.isValid(rectangle.x + x, rectangle.y + y)) {
-                        hsurfMean += hSurfCell[x][y];
+                        hsurfMean += SurfCells[x][y];
                         hsurfCount++;
                     }
                 }

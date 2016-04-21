@@ -131,9 +131,9 @@ public class ScapeMAtmosCorrOp extends ScapeMMerisBasisOp {
                 hsurfArrayCell = ScapeMAlgorithm.getHsurfArrayCell(targetRect, geoCoding, altitudeTile, scapeMLut);
             }
 
-            final double hsurfMeanCell = ScapeMAlgorithm.getMeanCell(hsurfArrayCell, targetRect, clearPixelStrategy);
+            final double hsurfMeanCell = ScapeMAlgorithm.getCellMean(hsurfArrayCell, targetRect, clearPixelStrategy);
             final double[][] cosSzaArrayCell = ScapeMAlgorithm.getCosSzaArrayCell(targetRect, szaTile);
-            final double cosSzaMeanCell = ScapeMAlgorithm.getMeanCell(cosSzaArrayCell, targetRect, clearPixelStrategy);
+            final double cosSzaMeanCell = ScapeMAlgorithm.getCellMean(cosSzaArrayCell, targetRect, clearPixelStrategy);
 
             final int doy = sourceProduct.getStartTime().getAsCalendar().get(Calendar.DAY_OF_YEAR);
             double[][][] toaArrayCell = new double[ScapeMConstants.L1_BAND_NUM][targetRect.width][targetRect.height];

@@ -95,8 +95,6 @@ public class ScapeMOp extends ScapeMMerisBasisOp {
             defaultValue = "1600")
     private float minimumOceanSize;
 
-    @Parameter(description = "Whether or not to calculate a lake mask", defaultValue = "true")
-    private boolean calculateLakes;
 
 
     protected ScapeMLut scapeMLut;
@@ -181,7 +179,7 @@ public class ScapeMOp extends ScapeMMerisBasisOp {
         operator.setParameter("reflectance_water_threshold", reflectance_water_threshold);
         operator.setParameter("thicknessOfCoast", thicknessOfCoast);
         operator.setParameter("minimumOceanSize", minimumOceanSize);
-        operator.setParameter("calculateLakes", calculateLakes);
+        operator.setParameter("calculateLakes", !computeOverWater);
         return operator.getTargetProduct();
     }
 

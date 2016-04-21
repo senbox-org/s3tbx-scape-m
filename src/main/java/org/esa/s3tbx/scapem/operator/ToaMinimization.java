@@ -73,9 +73,11 @@ public class ToaMinimization implements MvFunction {
                     lpwInt[i] = ((((lpwArray[i][visInf + 1] - lpwArray[i][visInf]) * vis) +
                             (lpwArray[i][visInf] * visArrayLUT[visInf + 1])) -
                             (lpwArray[i][visInf + 1] * visArrayLUT[visInf])) * delta;
+
                     etwInt[i] = ((((etwArray[i][visInf + 1] - etwArray[i][visInf]) * vis) +
                             (etwArray[i][visInf] * visArrayLUT[visInf + 1])) -
                             (etwArray[i][visInf + 1] * visArrayLUT[visInf])) * delta;
+
                     sabInt[i] = ((((sabArray[i][visInf + 1] - sabArray[i][visInf]) * vis) +
                             (sabArray[i][visInf] * visArrayLUT[visInf + 1])) -
                             (sabArray[i][visInf + 1] * visArrayLUT[visInf])) * delta;
