@@ -21,7 +21,7 @@ import java.awt.*;
  *
  * @author Tonio Fincke, Olaf Danne
  */
-@OperatorMetadata(alias = "beam.scapeM.gapfill", version = "1.0-SNAPSHOT",
+@OperatorMetadata(alias = "snap.scapeM.gapfill", version = "1.0-SNAPSHOT",
         authors = "Tonio Fincke, Olaf Danne",
         copyright = "(c) 2013 Brockmann Consult",
         internal = true,

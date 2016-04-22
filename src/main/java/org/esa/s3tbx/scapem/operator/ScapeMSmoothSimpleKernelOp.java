@@ -24,7 +24,7 @@ import java.awt.image.RenderedImage;
  *
  * @author olafd
  */
-@OperatorMetadata(alias = "beam.scapeM.smooth.simple", version = "1.0-SNAPSHOT",
+@OperatorMetadata(alias = "snap.scapeM.smooth.simple", version = "1.0-SNAPSHOT",
                   authors = "Olaf Danne",
                   copyright = "(c) 2014 Brockmann Consult",
                   internal = true,

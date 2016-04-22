@@ -30,7 +30,7 @@ import java.util.Calendar;
  *
  * @author Tonio Fincke, Olaf Danne
  */
-@OperatorMetadata(alias = "beam.scapeM.visibility", version = "1.0-SNAPSHOT",
+@OperatorMetadata(alias = "snap.scapeM.visibility", version = "1.0-SNAPSHOT",
         authors = "Tonio Fincke, Olaf Danne",
         copyright = "(c) 2013 Brockmann Consult",
         internal = true,

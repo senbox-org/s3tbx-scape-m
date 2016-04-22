@@ -174,7 +174,6 @@ public class ScapeMOp extends ScapeMMerisBasisOp {
 
     private Product getCloudProduct() {
         Operator operator = new FubScapeMClassificationOp();
-
         operator.setSourceProduct(sourceProduct);
         operator.setParameter("reflectance_water_threshold", reflectance_water_threshold);
         operator.setParameter("thicknessOfCoast", thicknessOfCoast);
